@@ -14,7 +14,7 @@ const Scheduler = require('./jobs/appDataJob');
 
 console.log(process.env.SUCCESS);
 const app = express();
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 3100;
 const db = require('./configurations/datasource');
 
 //body parser
