@@ -3,7 +3,9 @@ const express = require('express');
 const morgan = require('morgan');
 const dotenv = require('dotenv');
 dotenv.config();
+const fs = require('fs');
 const bodyParser = require('body-parser');
+const https = require('https');
 const clientAppController = require('./routes/clientAppController');
 const herokuAppController = require('./routes/herokuAppController');
 const herokuAuthController = require('./routes/herokuAuthController');
@@ -27,6 +29,9 @@ app.use('/apps', herokuAppController);
 app.use('/heroku/auth', herokuAuthController);
 app.use('/auth', AuthController);
 
-app.listen(port, () => {
+https.createServer({
+    key: fs.readFileSync('server.key'),
+    cert: fs.readFileSync('server.cert')
+}, app).listen(port, () => {
     console.log(`app running on port ${port}`);
 })
