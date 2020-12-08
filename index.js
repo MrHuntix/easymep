@@ -15,6 +15,7 @@ const AuthController = require('./routes/authController');
 const Scheduler = require('./jobs/appDataJob');
 
 console.log(process.env.SUCCESS);
+console.log(`starting application`)
 const app = express();
 const port = process.env.PORT || 3100;
 const db = require('./configurations/datasource');

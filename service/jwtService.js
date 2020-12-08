@@ -11,7 +11,6 @@ class JWTService {
             const token = await jwt.sign({ username }, _secret, {
                 algorithm: "HS256"
             });
-            console.log(`token ${token}`);
             return token;
         } catch (error) {
             console.error(error);
@@ -25,7 +24,6 @@ class JWTService {
             let authheader = req.headers.authorization;
             console.log(`authheader ${authheader}`);
             let token = authheader && authheader.split(' ')[1];
-            console.log(`token ${token}`);
             if (token == null) return res.sendStatus(401);
 
             let payload = await jwt.verify(token, _secret);
