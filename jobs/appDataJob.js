@@ -10,7 +10,7 @@ class MyScheduler {
 
     //schedules job to run every day to update apps data
     async _startAppUpdateJob() {
-        let job = scheduler.schedule("* 30 23 * * *", async () => {
+        scheduler.schedule("30 30 0 * * *", async () => {
             try {
                 console.log(`app update job triggered at ${new Date()}`);
                 let result = await HerokuAuthModel.find({}, ['access_token']).exec();
@@ -52,6 +52,8 @@ class MyScheduler {
                 console.log(`app update job completed at ${new Date()}`);
             } catch (error) {
                 console.log(`error while retreiving tokens ${error.message}`);
+            } finally {
+                console.log(`job completed ${Date()}`)
             }
         });
     }
@@ -79,5 +81,3 @@ class MyScheduler {
 }
 
 module.exports = new MyScheduler();
-
-
