@@ -50,7 +50,7 @@ router.post('/signup', async (req, res) => {
             let doc = await user.save();
             res.status(200).send(JSON.stringify({
                 'message': 'signup successful',
-                'username': username,
+                'doc': doc
             }))
         }
     } catch (error) {
