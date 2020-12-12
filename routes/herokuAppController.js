@@ -8,13 +8,13 @@ router.use(jwtService.validateToken);
 router.get('/', async (req, res) => {
     try {
         let result = await AppDataModel.find().exec();
-        res.status(200).json({
+        res.status(200).send({
             "message": `found ${result.length} apps`,
             "apps": result
         });
     } catch (error) {
         console.error(err);
-        res.send(500).json({
+        res.status(500).send({
             'message': 'An error occured while retriving apps'
         });
     }

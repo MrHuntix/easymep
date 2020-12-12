@@ -10,10 +10,10 @@ router.use(jwtService.validateToken);
 router.get('/', async (req, res) => {
     try {
         let result = await AppModel.find({}, ["_id", "app_name", "description"]).exec();
-        res.status(200).json(result);
+        res.status(200).send(result);
     } catch (error) {
         console.error(error);
-        res.send(500).json({
+        res.status(500).send({
             'message': 'An error occured while retriving projects'
         });
     }
@@ -31,7 +31,7 @@ router.post('/', async (req, res) => {
     try {
         let doc = await app.save();
         console.log(doc);
-        res.status(200).json({
+        res.status(200).send({
             'message': 'token added',
             'id': doc._id,
             'app_name': doc.app_name,
@@ -39,7 +39,7 @@ router.post('/', async (req, res) => {
         });
     } catch (error) {
         console.error(error);
-        res.send(500).json({
+        res.status(500).send({
             'message': 'An error occured while saving project'
         });
     }
@@ -51,7 +51,7 @@ router.put('/:id', async (req, res) => {
         let doc = await AppModel.findByIdAndUpdate(req.params.id, req.body, { new: true }).exec();
         console.log(`updated ${doc._id}`);
 
-        res.status(200).json({
+        res.status(200).send({
             'message': 'project updated',
             'id': doc._id,
             'app_name': doc.app_name,
@@ -59,7 +59,7 @@ router.put('/:id', async (req, res) => {
         });
     } catch (error) {
         console.error(error);
-        res.send(500).json({
+        res.status(500).send({
             'message': 'An error occured while updating project'
         });
     }
@@ -71,13 +71,13 @@ router.delete('/:id', async (req, res) => {
         let doc = await AppModel.findByIdAndDelete(req.params.id).exec();
         console.log(`deleted ${doc._id}`);
 
-        res.status(200).json({
+        res.status(200).send({
             'message': 'project deleted',
             'id': doc._id
         });
     } catch (error) {
         console.error(error);
-        res.send(500).send({
+        res.status(500).send({
             'message': 'An error occured while deleting project'
         });
     }

@@ -9,13 +9,13 @@ router.use(jwtService.validateToken);
 router.get('/', async (req, res) => {
     try {
         let result = await HerokuAuthModel.find().exec();
-        res.status(200).json({
+        res.status(200).send({
             "message": `found ${result.length} tokens`,
             "tokens": result
         });
     } catch (error) {
         console.error(err);
-        res.send(500).json({
+        res.status(500).send({
             'message': 'An error occured while retriving tokens'
         });
     }
@@ -35,13 +35,13 @@ router.post('/', async (req, res) => {
 
         let doc = await authData.save();
         console.log(doc);
-        res.status(200).json({
+        res.status(200).send({
             'message': 'token added',
             'token': doc
         });
     } catch (error) {
         console.error(error);
-        res.send(500).json({
+        res.status(500).send({
             'message': 'An error occured while adding new token'
         });
     }
