@@ -10,29 +10,33 @@ router.post('/login', async (req, res) => {
     try {
         let { username, password } = req.body;
         let user = await AuthDataModel.find({ 'username': username }).exec();
-        // console.log(`${user[0].password} ${user} res ${password}`);
-        if (user.password === password) {
-            res.status(200).json({
-                'message': 'login successful',
-                'username': user[0].username,
-                'token': user[0].auth_token,
-            });
-        }
-        else if (!user.active) {
-            res.status(401).json({
-                'message': 'account blocked',
-                'username': 'unavailable',
-                'token': 'unavailable',
-            });
-        }
-        else {
+        if (user.length === 0) {
             res.status(401).send({
                 'message': 'invalid username/password',
                 'username': 'unavailable',
                 'token': 'unavailable',
             });
         }
-
+        if (user[0].password === password && user[0].active) {
+            res.status(200).json({
+                'message': 'login successful',
+                'username': user[0].username,
+                'token': user[0].auth_token,
+            });
+        } else if (user[0].password != password) {
+            res.status(401).send({
+                'message': 'invalid username/password',
+                'username': 'unavailable',
+                'token': 'unavailable',
+            });
+        }
+        if (!user[0].active) {
+            res.status(401).json({
+                'message': 'account blocked',
+                'username': 'unavailable',
+                'token': 'unavailable',
+            });
+        }
     } catch (error) {
         console.error(error);
         res.status(500).send({
@@ -50,10 +54,9 @@ router.post('/signup', async (req, res) => {
     try {
 
         let { username, password, source } = req.body;
-        let user = await AuthDataModel.find({ username: username }).exec();
-        console.log(`user ${user[0].username}, input ${username}`);
-        if (user[0].username === username) {
-            console.log(`duplicate username ${user[0].username}`);
+        let user = await AuthDataModel.find({ 'username': username }).exec();
+        if (user.length > 0) {
+            console.log(`user ${username} exists.`);
             res.status(200).send(JSON.stringify({
                 'message': 'username already in use',
                 'username': 'unavailable',
