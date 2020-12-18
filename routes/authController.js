@@ -20,19 +20,25 @@ router.post('/login', async (req, res) => {
         }
         else if (!user.active) {
             res.status(401).json({
-                'message': 'account blocked'
+                'message': 'account blocked',
+                'username': 'unavailable',
+                'token': 'unavailable',
             });
         }
         else {
             res.status(401).send({
-                'message': 'invalid username/password'
+                'message': 'invalid username/password',
+                'username': 'unavailable',
+                'token': 'unavailable',
             });
         }
 
     } catch (error) {
         console.error(error);
         res.status(500).send({
-            'message': 'login error'
+            'message': 'login error',
+            'username': 'unavailable',
+            'token': 'unavailable',
         });
     }
 
@@ -44,11 +50,15 @@ router.post('/signup', async (req, res) => {
     try {
 
         let { username, password, source } = req.body;
-        let user = await AuthDataModel.find({ 'username': username }).exec();
-        if (user.username === username) {
-            res.status(200).send({
-                'message': 'username exists'
-            });
+        let user = await AuthDataModel.find({ username: username }).exec();
+        console.log(`user ${user[0].username}, input ${username}`);
+        if (user[0].username === username) {
+            console.log(`duplicate username ${user[0].username}`);
+            res.status(200).send(JSON.stringify({
+                'message': 'username already in use',
+                'username': 'unavailable',
+                'token': 'unavailable',
+            }));
         } else {
             if (username && password) {
                 let token = await jwtService.createToken(username);
@@ -71,9 +81,11 @@ router.post('/signup', async (req, res) => {
         }
     } catch (error) {
         console.error(error);
-        res.status(500).send({
-            'message': 'signup error'
-        });
+        res.status(500).send(JSON.stringify({
+            'message': 'signup error',
+            'username': 'unavailable',
+            'token': 'unavailable',
+        }));
     }
 
 });
