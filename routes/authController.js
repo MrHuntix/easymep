@@ -31,7 +31,7 @@ router.post('/login', async (req, res) => {
 
     } catch (error) {
         console.error(error);
-        res.status(401).send({
+        res.status(500).send({
             'message': 'login error'
         });
     }
@@ -71,7 +71,7 @@ router.post('/signup', async (req, res) => {
         }
     } catch (error) {
         console.error(error);
-        res.status(401).send({
+        res.status(500).send({
             'message': 'signup error'
         });
     }
