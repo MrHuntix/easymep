@@ -11,14 +11,14 @@ router.post('/login', async (req, res) => {
         let { username, password } = req.body;
         let user = await AuthDataModel.find({ 'username': username }).exec();
         // console.log(`${user[0].password} ${user} res ${password}`);
-        if (user[0].password === password) {
+        if (user.password === password) {
             res.status(200).json({
                 'message': 'login successful',
                 'username': user[0].username,
                 'token': user[0].auth_token,
             });
         }
-        else if (!user[0].active) {
+        else if (!user.active) {
             res.status(401).json({
                 'message': 'account blocked'
             });
@@ -45,7 +45,7 @@ router.post('/signup', async (req, res) => {
 
         let { username, password, source } = req.body;
         let user = await AuthDataModel.find({ 'username': username }).exec();
-        if (user[0].username === username) {
+        if (user.username === username) {
             res.status(200).send({
                 'message': 'username exists'
             });
@@ -64,8 +64,8 @@ router.post('/signup', async (req, res) => {
                 let doc = await user.save();
                 res.status(200).send(JSON.stringify({
                     'message': 'signup successful',
-                    'username': doc[0].username,
-                    'token': doc[0].auth_token,
+                    'username': doc.username,
+                    'token': doc.auth_token,
                 }))
             }
         }
