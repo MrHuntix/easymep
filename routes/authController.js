@@ -16,26 +16,27 @@ router.post('/login', async (req, res) => {
                 'username': 'unavailable',
                 'token': 'unavailable',
             });
-        }
-        if (user[0].password === password && user[0].active) {
-            res.status(200).json({
-                'message': 'login successful',
-                'username': user[0].username,
-                'token': user[0].auth_token,
-            });
-        } else if (user[0].password != password) {
-            res.status(401).send({
-                'message': 'invalid username/password',
-                'username': 'unavailable',
-                'token': 'unavailable',
-            });
-        }
-        if (!user[0].active) {
-            res.status(401).json({
-                'message': 'account blocked',
-                'username': 'unavailable',
-                'token': 'unavailable',
-            });
+        } else {
+            if (user[0].password === password && user[0].active) {
+                res.status(200).json({
+                    'message': 'login successful',
+                    'username': user[0].username,
+                    'token': user[0].auth_token,
+                });
+            } else if (user[0].password != password) {
+                res.status(401).send({
+                    'message': 'invalid username/password',
+                    'username': 'unavailable',
+                    'token': 'unavailable',
+                });
+            }
+            if (!user[0].active) {
+                res.status(401).json({
+                    'message': 'account blocked',
+                    'username': 'unavailable',
+                    'token': 'unavailable',
+                });
+            }
         }
     } catch (error) {
         console.error(error);
