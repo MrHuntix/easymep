@@ -31,7 +31,7 @@ router.post('/login', async (req, res) => {
 
     } catch (error) {
         console.error(error);
-        rres.status(401).send({
+        res.status(401).send({
             'message': 'login error'
         });
     }
