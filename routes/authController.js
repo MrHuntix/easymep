@@ -58,11 +58,11 @@ router.post('/signup', async (req, res) => {
         let user = await AuthDataModel.find({ 'username': username }).exec();
         if (user.length > 0) {
             console.log(`user ${username} exists.`);
-            res.status(200).send(JSON.stringify({
+            res.status(200).json({
                 'message': 'username already in use',
                 'username': 'unavailable',
                 'token': 'unavailable',
-            }));
+            });
         } else {
             if (username && password) {
                 let token = await jwtService.createToken(username);
@@ -76,20 +76,20 @@ router.post('/signup', async (req, res) => {
                 });
                 console.log('token generated. Saving user');
                 let doc = await user.save();
-                res.status(200).send(JSON.stringify({
+                res.status(200).json({
                     'message': 'signup successful',
                     'username': doc.username,
                     'token': doc.auth_token,
-                }))
+                });
             }
         }
     } catch (error) {
         console.error(error);
-        res.status(500).send(JSON.stringify({
+        res.status(500).json({
             'message': 'signup error',
             'username': 'unavailable',
             'token': 'unavailable',
-        }));
+        });
     }
 
 });
