@@ -11,15 +11,16 @@
   "author": "puneeth",
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.21.0",
+    "axios": "^0.21.1",
     "cron": "^1.8.2",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "https": "^1.0.0",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.10.18",
+    "mongoose": "^5.12.0",
     "morgan": "^1.10.0",
     "node-cron": "^2.0.3",
+    "sse-nodejs": "^0.1.0",
     "validator": "^13.1.17"
   },
   "devDependencies": {

@@ -1,5 +1,5 @@
 let jwt = require('jsonwebtoken');
-const _secret = process.env.SECRET_KEY;//'this_is_a_secret';
+const _secret = process.env.SECRET_KEY;
 
 class JWTService {
     constructor() {

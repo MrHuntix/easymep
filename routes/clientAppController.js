@@ -2,21 +2,37 @@
 const express = require('express');
 const router = express.Router();
 let AppModel = require('../models/app');
-const HerokuApi = require('../service/herokuApi');
 let jwtService = require('../service/jwtService');
+let eventService = require('../service/eventService');
+let SSE = require('sse-nodejs');
+//router.use(jwtService.validateToken);
 
-router.use(jwtService.validateToken);
 //get request to fetch all the apps that is being displayed in my website
 router.get('/', async (req, res) => {
     try {
-        let result = await AppModel.find({}, ["_id", "app_name", "description"]).exec();
-        res.status(200).send(result);
+        let result = await AppModel.find({}, ["_id", "app_name", "description", "live_url", "git_url", "languages"]).exec();
+        res.status(200).send({
+            'message': `found ${result.length} apps`,
+            'apps': result
+        });
+
     } catch (error) {
         console.error(error);
         res.status(500).send({
             'message': 'An error occured while retriving projects'
         });
     }
+});
+
+router.get('/delta', (req, res) => {
+    console.log('delta');
+    let sseProducer = SSE(res);
+
+    sseProducer.disconnect(() => {
+        eventService.removeConsumer(req.hostname);
+    });
+    
+    eventService.addConsumer(req.hostname, sseProducer);
 });
 
 //post request to add a project that will be displayed in my website.
@@ -31,8 +47,12 @@ router.post('/', async (req, res) => {
     try {
         let doc = await app.save();
         console.log(doc);
+
+        //sse notify step
+        await eventService.notifyConsumers(doc);
+
         res.status(200).send({
-            'message': 'token added',
+            'message': 'app added',
             'id': doc._id,
             'app_name': doc.app_name,
             'description': doc.description,
@@ -72,8 +92,7 @@ router.delete('/:id', async (req, res) => {
         console.log(`deleted ${doc._id}`);
 
         res.status(200).send({
-            'message': 'project deleted',
-            'id': doc._id
+            'message': `${doc.app_name} deleted`
         });
     } catch (error) {
         console.error(error);

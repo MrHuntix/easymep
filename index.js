@@ -30,9 +30,15 @@ app.use('/apps', herokuAppController);
 app.use('/heroku/auth', herokuAuthController);
 app.use('/auth', AuthController);
 
-https.createServer({
-    key: fs.readFileSync('server.key'),
-    cert: fs.readFileSync('server.cert')
-}, app).listen(port, () => {
-    console.log(`app running on port ${port}`);
-})
+if (process.env.HTTPS_FLAG) {
+    app.listen(port, () => {
+        console.log(`app running on port ${port} and protocol http`);
+    });
+} else {
+    https.createServer({
+        key: fs.readFileSync('server.key'),
+        cert: fs.readFileSync('server.cert')
+    }, app).listen(port, () => {
+        console.log(`app running on port ${port} and protocol https`);
+    });
+}
