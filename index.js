@@ -30,7 +30,7 @@ app.use('/apps', herokuAppController);
 app.use('/heroku/auth', herokuAuthController);
 app.use('/auth', AuthController);
 
-if (process.env.HTTPS_FLAG) {
+if (process.env.HTTPS_FLAG === "http") {
     app.listen(port, () => {
         console.log(`app running on port ${port} and protocol http`);
     });
