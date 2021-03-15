@@ -36,8 +36,8 @@ if (process.env.HTTPS_FLAG === "http") {
     });
 } else {
     https.createServer({
-        key: fs.readFileSync('server.key'),
-        cert: fs.readFileSync('server.cert')
+        key: fs.readFileSync(process.env.HTTPS_KEY),
+        cert: fs.readFileSync(process.env.HTTPS_CERT)
     }, app).listen(port, () => {
         console.log(`app running on port ${port} and protocol https`);
     });
