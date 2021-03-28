@@ -6,6 +6,8 @@ dotenv.config();
 const fs = require('fs');
 const bodyParser = require('body-parser');
 const https = require('https');
+var path = require('path');
+
 const clientAppController = require('./routes/clientAppController');
 const herokuAppController = require('./routes/herokuAppController');
 const herokuAuthController = require('./routes/herokuAuthController');
@@ -22,8 +24,17 @@ const db = require('./configurations/datasource');
 
 //body parser
 app.use(bodyParser.json());
+
 //morgan fpr logging
 app.use(morgan('combined'));
+app.use(express.static(`${__dirname}${process.env.STATIC_PATH}`));
+
+//home page
+app.get('/', (req, res) => {
+    console.log(`dirname: ${__dirname}`);
+    res.sendFile(path.join(`${__dirname}${process.env.HOME_PATH}`));
+});
+
 //routers
 app.use('/client', clientAppController);
 app.use('/apps', herokuAppController);
